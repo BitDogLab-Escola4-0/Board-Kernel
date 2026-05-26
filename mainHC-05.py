@@ -41,8 +41,8 @@ from hardware import (
 
 # Imports connection modules
 print("Loading connection modules...")
-from connections.bluetooth_hc05 import bluetooth_hc05
-from connections.wifi import wifi
+from bluetooth_hc05 import bluetooth_hc05
+from wifi import wifi
 
 # Imports snake game
 print("Loading snake game...")
