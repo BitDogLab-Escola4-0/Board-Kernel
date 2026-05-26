@@ -36,9 +36,10 @@ class GenericAPI:
 
     # --- CONTROLES DO LED RGB ---
     def set_rgb(self, r, g, b):
-        self.led_r.duty_u16(r * 255)
-        self.led_g.duty_u16(g * 255)
-        self.led_b.duty_u16(b * 255)
+        """Define a cor do LED RGB (valores 0-255)"""
+        self.led_r.duty_u16((r * 65535) // 255)
+        self.led_g.duty_u16((g * 65535) // 255)
+        self.led_b.duty_u16((b * 65535) // 255)
 
     # --- CONTROLES DO BUZZER ---
     def play_buzzer(self, freq, duration_ms=200):
