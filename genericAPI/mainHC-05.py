@@ -32,7 +32,7 @@ led_b.freq(1000)
 
 # Imports hardware
 print("Loading hardware...")
-from hardware import (
+from genericAPI.hardware import (
     update_oled, clear_oled,
     joy_up,joy_down, button_a, button_b,
     led,
@@ -41,8 +41,8 @@ from hardware import (
 
 # Imports connection modules
 print("Loading connection modules...")
-from connections.bluetooth_hc05 import bluetooth_hc05
-from connections.wifi import wifi
+from genericAPI.bluetooth_hc05 import bluetooth_hc05
+from genericAPI.wifi import wifi
 
 # Imports snake game
 print("Loading snake game...")

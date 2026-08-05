@@ -1,6 +1,6 @@
 # Imports
 from machine import UART
-from hardware import clear_oled
+from genericAPI.hardware import clear_oled
 
 # UART Configuration for HC-05
 uart = UART(0, baudrate=9600)

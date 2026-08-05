@@ -5,7 +5,7 @@ import time
 import gc
 
 # Import all hardware components for exec() commands and feedback
-from hardware import (
+from genericAPI.hardware import (
     led, update_oled, clear_oled
 )
 

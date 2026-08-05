@@ -36,9 +36,13 @@ class GenericAPI:
 
     # --- CONTROLES DO LED RGB ---
     def set_rgb(self, r, g, b):
-        self.led_r.duty_u16(r * 255)
-        self.led_g.duty_u16(g * 255)
-        self.led_b.duty_u16(b * 255)
+        """
+        Define a cor do LED RGB. Espera valores de 0 a 255 para r, g e b.
+        Multiplicamos por 257 para escalar perfeitamente para 0-65535.
+        """
+        self.led_r.duty_u16(int(r * 257))
+        self.led_g.duty_u16(int(g * 257))
+        self.led_b.duty_u16(int(b * 257))
 
     # --- CONTROLES DO BUZZER ---
     def play_buzzer(self, freq, duration_ms=200):
@@ -49,47 +53,66 @@ class GenericAPI:
             time.sleep_ms(duration_ms)
             self.buzzer.duty_u16(0)
 
+    # --- FUNÇÕES AUXILIARES DA MATRIZ ---
+    def map_numbers(self, pos, cols=5):
+        """
+        Mapeia um índice lógico (leitura padrão da esquerda para a direita)
+        para o índice físico de uma matriz ligada em zigue-zague.
+        Assumimos por padrão 5 colunas (matriz 5x5 da BitDogLab).
+        """
+        if pos < 0 or pos >= self.matrix_size:
+            return pos # Retorna a própria posição se estiver fora do limite
+            
+        row = pos // cols # Descobre em qual linha estamos
+        col = pos % cols  # Descobre em qual coluna estamos
+        
+        # Se a linha for ímpar (1, 3, 5...), a fiação corre no sentido inverso
+        if row % 2 != 0:
+            col = (cols - 1) - col
+            
+        return (row * cols) + col
+
     # --- CONTROLES DA MATRIZ NEOPIXEL ---
-def set_neopixel(self, instruction_string):
-    """
-    Processa uma string no formato 'pos:r,g,b;pos:r,g,b'
-    Exemplo: "0:255,0,0;12:0,255,0"
-    """
-    # 1. Limpa a matriz antes de começar o novo desenho
-    self.clear_matrix() 
-    
-    # 2. Divide a string em instruções individuais
-    instructions = instruction_string.split(';')
-    
-    for instruction in instructions:
-        if not instruction.strip():
-            continue
-            
-        try:
-            # Separa posição e cores
-            pos_str, cor_str = instruction.split(':')
-            
-            # Converte e mapeia a posição
-            pos = int(pos_str)
-            mapped_pos = self.map_numbers(pos) # Assume que map_numbers é um método da classe
-            
-            # Converte a string de cor "R,G,B" em uma tupla de inteiros
-            color = tuple(map(int, cor_str.split(',')))
-            
-            # 3. Define a cor na memória (sem dar write() ainda para ser mais rápido)
-            if 0 <= mapped_pos < self.matrix_size:
-                self.matrix[mapped_pos] = color
-            else:
-                print(f"Posição {mapped_pos} fora do range.")
+    def set_neopixel(self, instruction_string):
+        """
+        Processa uma string no formato 'pos:r,g,b;pos:r,g,b'
+        Exemplo: "0:255,0,0;12:0,255,0"
+        """
+        # 1. Limpa a matriz antes de começar o novo desenho
+        self.clear_matrix() 
+        
+        # 2. Divide a string em instruções individuais
+        instructions = instruction_string.split(';')
+        
+        for instruction in instructions:
+            if not instruction.strip():
+                continue
                 
-        except (ValueError, IndexError) as e:
-            print(f"Erro ao processar '{instruction}': {e}")
+            try:
+                # Separa posição e cores
+                pos_str, cor_str = instruction.split(':')
+                
+                # Converte e mapeia a posição usando o novo método
+                pos = int(pos_str)
+                mapped_pos = self.map_numbers(pos, cols=5) 
+                
+                # Converte a string de cor "R,G,B" em uma tupla de inteiros
+                color = tuple(map(int, cor_str.split(',')))
+                
+                # 3. Define a cor na memória
+                if 0 <= mapped_pos < self.matrix_size:
+                    self.matrix[mapped_pos] = color
+                else:
+                    print(f"Posição {mapped_pos} fora do range.")
+                    
+            except (ValueError, IndexError) as e:
+                print(f"Erro ao processar '{instruction}': {e}")
 
-    # 4. Atualiza o hardware uma única vez após processar toda a string
-    self.matrix.write()
-
-def clear_matrix(self, update=True):
-    for i in range(self.matrix_size):
-        self.matrix[i] = (0, 0, 0)
-    if update:
+        # 4. Atualiza o hardware uma única vez após processar toda a string
         self.matrix.write()
+
+    def clear_matrix(self, update=True):
+        for i in range(self.matrix_size):
+            self.matrix[i] = (0, 0, 0)
+        if update:
+            self.matrix.write()
