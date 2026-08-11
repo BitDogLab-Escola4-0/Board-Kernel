@@ -2,7 +2,7 @@
 from machine import Pin, PWM, I2C, ADC
 import neopixel
 import time
-from lib.ssd1306 import SSD1306_I2C
+from Kernel.lib.ssd1306 import SSD1306_I2C
 
 # Constants:
 # Width and Height of OLED Display
@@ -51,6 +51,13 @@ led_r.duty_u16(0); led_g.duty_u16(0); led_b.duty_u16(0) # Turn off
 # Buzzers (PWM)
 buzzer = PWM(Pin(21)); buzzer2 = PWM(Pin(10))
 buzzer.duty_u16(0); buzzer2.duty_u16(0) # Turn off
+
+# Turns off all three channels of the onboard RGB LED
+def rgb_off():
+    led_r.duty_u16(0)
+    led_g.duty_u16(0)
+    led_b.duty_u16(0)
+
 
 # Plays a tone on the main buzzer
 def play_tone(frequency, duration_s=0.1, volume=500):
