@@ -5,10 +5,10 @@ import time
 import gc
 
 # Import all hardware components for exec() commands and feedback
-from Kernel.genericAPI.hardware import (
+from genericAPI.hardware import (
     led, update_oled, clear_oled
 )
-from Kernel.genericAPI.websocket_server import (
+from genericAPI.websocket_server import (
     perform_handshake,
     recv_frame,
     send_text,
@@ -21,7 +21,7 @@ from Kernel.genericAPI.websocket_server import (
 
 # Network configuration
 AP_SSID = "BDL #001"  # Network name
-AP_PASSWORD = "BDL001"    # Network password (min 8 chars)
+AP_PASSWORD = "BDL00001"    # Network password (min 8 chars)
 AP_IP = "192.168.4.1"        # Pico's static IP
 TCP_PORT = 8080
 
@@ -94,11 +94,7 @@ def ws_server(ip):
 
             # Handshake HTTP -> WebSocket. Se não for uma requisição WS
             # válida (ex: alguém batendo com curl comum), fecha e segue.
-            if not perform_handshake(client_socket):
-                print("Handshake WebSocket falhou (requisicao invalida).")
-                client_socket.close()
-                continue
-
+            
             print("Handshake WebSocket concluido.")
             update_oled([
                 "",

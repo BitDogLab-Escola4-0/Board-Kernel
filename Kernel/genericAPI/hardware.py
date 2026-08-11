@@ -2,7 +2,7 @@
 from machine import Pin, PWM, I2C, ADC
 import neopixel
 import time
-from Kernel.lib.ssd1306 import SSD1306_I2C
+from lib.ssd1306 import SSD1306_I2C
 
 # Constants:
 # Width and Height of OLED Display

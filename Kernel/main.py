@@ -7,10 +7,10 @@ automaticamente, ao ligar/resetar, os arquivos boot.py e main.py que
 estiverem na raiz. Qualquer outro nome (ex: mainHC-05.py) precisa ser
 importado/rodado manualmente.
 """
-
+import time
 # Imports hardware
 print("Loading hardware...")
-from Kernel.genericAPI.hardware import (
+from genericAPI.hardware import (
     update_oled, clear_oled,
     joy_up,joy_down, button_a, button_b,
     led,
@@ -20,8 +20,8 @@ from Kernel.genericAPI.hardware import (
 
 # Imports connection modules
 print("Loading connection modules...")
-from Kernel.genericAPI.bluetooth_hc05 import bluetooth_hc05
-from Kernel.genericAPI.wifi import wifi
+from genericAPI.bluetooth_hc05 import bluetooth_hc05
+from genericAPI.wifi import wifi
 
 # Imports snake game
 print("Loading snake game...")

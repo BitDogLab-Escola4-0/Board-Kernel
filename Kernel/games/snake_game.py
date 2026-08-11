@@ -6,7 +6,7 @@ import time
 from machine import Timer
 
 # Importa constantes e hardware
-from Kernel.genericAPI.hardware import (
+from genericAPI.hardware import (
     SCREEN_WIDTH, SCREEN_HEIGHT, SEGMENT_WIDTH, SEGMENT_PIXELS,
     SEGMENTS_HIGH, SEGMENTS_WIDE, VALID_RANGE,
     oled, joystick_button, buzzer,
