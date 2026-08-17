@@ -25,7 +25,7 @@ from genericAPI.wifi import wifi
 
 # Imports snake game
 print("Loading snake game...")
-from Kernel.games.snake_game import snake_start
+from games.snake_game import snake_start
 
 print("=" * 40)
 
