@@ -11,6 +11,7 @@ import time
 # Imports hardware
 print("Loading hardware...")
 from genericAPI.hardware import (
+    SCREEN_HEIGHT,
     update_oled, clear_oled,
     joy_up,joy_down, button_a, button_b,
     led,
@@ -50,16 +51,35 @@ def show_menu(selected_index):
     option = MENU_OPTIONS[selected_index]
     
     # Setups OLED lines
-    lines = [
-        "== MENU ==",
-        "",
-        f"> {option['name']}",
-        "",
-        "",
-        "",
-        "Joy: Navegar",
-        "A: Selecionar"
-    ]
+    if SCREEN_HEIGHT >= 128:
+        lines = [
+            " ================== ",
+            "       MENU         ",
+            " ================== ",
+            "",
+            "",
+            f"  > {option['name']}",
+            "",
+            "",
+            "",
+            "",
+            "",
+            " ------------------ ",
+            "  Joy: Navegar      ",
+            "  A:   Selecionar   ",
+            " ================== "
+        ]
+    else:
+        lines = [
+            "== MENU ==",
+            "",
+            f"> {option['name']}",
+            "",
+            "",
+            "",
+            "Joy: Navegar",
+            "A: Selecionar"
+        ]
     
     update_oled(lines)
 
@@ -67,13 +87,26 @@ def show_menu(selected_index):
 def show_startup_animation():
 
     clear_oled()
-    update_oled([
-        "",
-        "  BitDogLab",
-        "  Pico 2W",
-        "",
-        "  Pronto!",
-    ])
+    if SCREEN_HEIGHT >= 128:
+        update_oled([
+            "",
+            "",
+            "",
+            " ================== ",
+            "    BitDogLab       ",
+            "     Pico 2W        ",
+            " ================== ",
+            "",
+            "     Pronto!        ",
+        ])
+    else:
+        update_oled([
+            "",
+            "  BitDogLab",
+            "  Pico 2W",
+            "",
+            "  Pronto!",
+        ])
     
     import time
     time.sleep(1)
@@ -127,13 +160,25 @@ def main():
                 print(f"Selected option: {option['name']}")
                 
                 # Show transition screen
-                update_oled([
-                    "Iniciando:",
-                    "",
-                    option['name'],
-                    "",
-                    "Aguarde..."
-                ])
+                if SCREEN_HEIGHT >= 128:
+                    update_oled([
+                        "",
+                        "",
+                        "   Iniciando:   ",
+                        "",
+                        f" > {option['name']}",
+                        "",
+                        "",
+                        "   Aguarde...   "
+                    ])
+                else:
+                    update_oled([
+                        "Iniciando:",
+                        "",
+                        option['name'],
+                        "",
+                        "Aguarde..."
+                    ])
                 
                 time.sleep(1)
                 

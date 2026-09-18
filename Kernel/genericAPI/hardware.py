@@ -2,18 +2,18 @@
 from machine import Pin, PWM, I2C, ADC
 import neopixel
 import time
-from lib.ssd1306 import SSD1306_I2C
+from lib.sh1107 import SH1107_I2C
 
 # Constants:
 # Width and Height of OLED Display
 SCREEN_WIDTH = 128
-SCREEN_HEIGHT = 64
+SCREEN_HEIGHT = 128
 
 # OLED Display constant used in snake_game
 SEGMENT_WIDTH = 8
-SEGMENT_PIXELS = int(SCREEN_HEIGHT / SEGMENT_WIDTH) # 64 / 8 = 8 pixels
-SEGMENTS_HIGH = int(SCREEN_HEIGHT / SEGMENT_WIDTH)  # 64 / 8 = 8 height segments
-SEGMENTS_WIDE = int(SCREEN_WIDTH / SEGMENT_WIDTH)   # 128 / 8 = 16 width segments
+SEGMENT_PIXELS = 8
+SEGMENTS_HIGH = int(SCREEN_HEIGHT / SEGMENT_PIXELS)  # 128 / 8 = 16 height segments
+SEGMENTS_WIDE = int(SCREEN_WIDTH / SEGMENT_PIXELS)   # 128 / 8 = 16 width segments
 
 # Valid range for grid coords (used to place the food)
 VALID_RANGE = [[int(i / SEGMENTS_HIGH), i % SEGMENTS_HIGH] 
@@ -30,16 +30,29 @@ def clear_oled():
 # Function to update and display text on OLED
 def update_oled(lines):
     oled.fill(0)
+    max_lines = SCREEN_HEIGHT // 8
     for i, line in enumerate(lines):
-        if i < 8:
+        if i < max_lines:
             oled.text(line, 0, i * 8)
     oled.show()
 
 # Components initialization:
 
-# OLED Display (128x64)
+# OLED Display (128x128)
 i2c = I2C(1, sda=Pin(2), scl=Pin(3), freq=400000)
-oled = SSD1306_I2C(SCREEN_WIDTH, SCREEN_HEIGHT, i2c)
+
+# Auto-detect I2C address (0x3C or 0x3D)
+oled_addr = 0x3C
+try:
+    devices = i2c.scan()
+    if 0x3D in devices:
+        oled_addr = 0x3D
+    elif 0x3C in devices:
+        oled_addr = 0x3C
+except Exception as e:
+    print("Warning scanning I2C:", e)
+
+oled = SH1107_I2C(SCREEN_WIDTH, SCREEN_HEIGHT, i2c, addr=oled_addr)
 oled.fill(0)
 oled.show()
 
