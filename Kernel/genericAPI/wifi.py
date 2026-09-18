@@ -20,7 +20,7 @@ from genericAPI.websocket_server import (
 )
 
 # Network configuration
-AP_SSID = "BDL #001"  # Network name
+AP_SSID = "BDL #002"  # Network name
 AP_PASSWORD = "BDL00001"    # Network password (min 8 chars)
 AP_IP = "192.168.4.1"        # Pico's static IP
 TCP_PORT = 8080
@@ -94,7 +94,11 @@ def ws_server(ip):
 
             # Handshake HTTP -> WebSocket. Se não for uma requisição WS
             # válida (ex: alguém batendo com curl comum), fecha e segue.
-            
+            if not perform_handshake(client_socket):
+                print("Handshake WebSocket falhou (requisicao invalida).")
+                client_socket.close()
+                continue
+
             print("Handshake WebSocket concluido.")
             update_oled([
                 "",
