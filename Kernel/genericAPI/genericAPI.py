@@ -66,8 +66,8 @@ class GenericAPI:
         row = pos // cols # Descobre em qual linha estamos
         col = pos % cols  # Descobre em qual coluna estamos
         
-        # Se a linha for ímpar (1, 3, 5...), a fiação corre no sentido inverso
-        if row % 2 != 0:
+        # Na BitDogLab, as linhas pares (0, 2, 4...) correm no sentido inverso
+        if row % 2 == 0:
             col = (cols - 1) - col
             
         return (row * cols) + col
